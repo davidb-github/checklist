@@ -45,10 +45,10 @@ def register_user(request):
     )
 
     # 
-    MyUser = MyUser.objects.create(user=new_user)
+    initUser = MyUser.objects.create(user=new_user)
 
     # Commit the user to the database by saving it
-    MyUser.save()
+    initUser.save()
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
     # Return the token to the client
