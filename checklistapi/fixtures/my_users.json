@@ -1,0 +1,16 @@
+[
+    {
+        "model": "checklistapi.MyUser",
+        "pk": 1,
+        "fields": {
+            "user": 1
+        }
+    },
+    {
+        "model": "checklistapi.MyUser",
+        "pk": 2,
+        "fields": {
+            "user": 2
+        }
+    }
+]

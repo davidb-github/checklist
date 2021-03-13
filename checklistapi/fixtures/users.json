@@ -1,0 +1,24 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "first_name": "userone",
+            "last_name": "usronelast",
+            "email": "user1@user.com",
+            "username": "user1@user.com",
+            "password": "pbkdf2_sha256$216000$DgHUZoNzXEiu$rLsmv7pLZU2iVuhel/1vn6gI7sQmsSL7p7m9YeJQ/p0="
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "first_name": "usertwo",
+            "last_name": "usrtwolast",
+            "email": "user2@user.com",
+            "username": "user2@user.com",
+            "password": "pbkdf2_sha256$216000$DgHUZoNzXEiu$rLsmv7pLZU2iVuhel/1vn6gI7sQmsSL7p7m9YeJQ/p0="
+        }
+    }
+]
