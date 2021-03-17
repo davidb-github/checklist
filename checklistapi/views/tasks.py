@@ -28,6 +28,7 @@ class Tasks(ViewSet):
         # a list of objects instead of a single object.
         serializer = TaskSerializer(
             all_tasks, many=True, context={'request': request})
+            
         return Response(serializer.data)
 
     #Handle GET requests for single task Returns:Response -- JSON serialized task
@@ -38,12 +39,40 @@ class Tasks(ViewSet):
             serializer = TaskSerializer(
                 task, context={'request': request})
             return Response(serializer.data)
+
         except Exception as ex:
             return HttpResponseServerError(ex)
+    
+    #Handle POST operations for tasks Returns: Response -- JSON serialized task instance
+    def create(self, request):
 
+        current_user = MyUser.objects.get(user=request.auth.user)
 
+        # Grab data from client's request to build a new task instance
+        task = Task()
+        task.user = current_user
+        task.task_name = request.data["task_name"]
+        task.task_description = request.data["task_description"]
+        task.is_complete = False
+
+        # Try to save the new game to the database, then
+        # serialize the game instance as JSON, and send the
+        # JSON as a response to the client request
+        try:
+            task.save()
+            serializer = TaskSerializer(task, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        # If anything went wrong, catch the exception and
+        # send a response with a 400 status code to tell the
+        # client that something was wrong with its request data
+        except ValidationError as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
+## Serializers ##
+
+#JSON serializer for default Django Users Arguments:serializers
 class UserSerializer(serializers.ModelSerializer):
-    #JSON serializer for default Django Users Arguments:serializers
 
     class Meta:
         model = User
@@ -54,9 +83,8 @@ class UserSerializer(serializers.ModelSerializer):
                  )
         depth = 1
 
-
+#JSON serializer for tasks Arguments: serializers
 class MyUserSerializer(serializers.ModelSerializer):
-    #JSON serializer for tasks Arguments: serializers
 
     user = UserSerializer(many=False)
 
@@ -68,9 +96,8 @@ class MyUserSerializer(serializers.ModelSerializer):
                  )
         depth = 1
 
-
+#JSON serializer for Tasks Arguments: serializers
 class TaskSerializer(serializers.ModelSerializer):
-    #JSON serializer for Tasks Arguments: serializers
 
     user = MyUserSerializer(many=False)
 
