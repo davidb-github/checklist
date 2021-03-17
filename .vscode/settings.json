@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "/Users/davidb/.local/share/virtualenvs/checklist-LtBYkR84/bin/python",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:checklist}/db.sqlite3",
+            "name": "checklistDB"
+        }
+    ]
+}
