@@ -1,4 +1,4 @@
-"""View module for handling requests about tasks"""
+#View module for handling requests about tasks
 from django.db.models import query
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
@@ -12,13 +12,8 @@ from checklistapi.models import Task, MyUser
 
 
 class Tasks(ViewSet):
-
+    #Handle GET requests to get all tasks Returns: Response:JSON serialized list of all tasks
     def list(self, request):
-        """Handle GET requests to get all tasks
-        Returns:
-            Response -- JSON serialized list of all tasks
-        """
-
         # Get all task records from database
         all_tasks = Task.objects.all()
 
@@ -35,43 +30,58 @@ class Tasks(ViewSet):
             all_tasks, many=True, context={'request': request})
         return Response(serializer.data)
 
+    #Handle GET requests for single task Returns:Response -- JSON serialized task
+    def retrieve(self, request, pk=None):
+
+        try:
+            task = Task.objects.get(pk=pk)
+            serializer = TaskSerializer(
+                task, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
 
 class UserSerializer(serializers.ModelSerializer):
-    """JSON serializer for default Django Users
-    Arguments:
-        serializers
-    """
+    #JSON serializer for default Django Users Arguments:serializers
 
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name')
+        fields = (
+                   'id',
+                   'first_name',
+                   'last_name'
+                 )
         depth = 1
 
 
 class MyUserSerializer(serializers.ModelSerializer):
-    """JSON serializer for tasks
-    Arguments:
-        serializers
-    """
+    #JSON serializer for tasks Arguments: serializers
 
     user = UserSerializer(many=False)
 
     class Meta:
         model = MyUser
-        fields = ('id', 'user')
+        fields = (
+                  'id',
+                  'user'
+                 )
         depth = 1
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    """JSON serializer for Tasks
-    Arguments:
-        serializers
-    """
+    #JSON serializer for Tasks Arguments: serializers
 
     user = MyUserSerializer(many=False)
 
     class Meta:
         model = Task
-        fields = ('id', 'user', 'task_name', 'task_description',
-                  'creation_date', 'is_complete')
+        fields = (
+                  'id', 
+                  'user',
+                  'task_name',
+                  'task_description',
+                  'creation_date',
+                  'is_complete'
+                 )
         depth = 1
