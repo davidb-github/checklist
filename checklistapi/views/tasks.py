@@ -1,5 +1,5 @@
 #View module for handling requests about tasks
-from django.db.models import query
+#from django.db.models import query
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -85,6 +85,21 @@ class Tasks(ViewSet):
         task.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    #Handle DELETE requests for a single game Returns: Response -- 200, 404, or 500 status code
+    def destroy(self, request, pk=None):
+
+        try:
+            task = Task.objects.get(pk=pk)
+            task.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Task.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 ## Serializers ##
