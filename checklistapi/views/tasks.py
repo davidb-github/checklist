@@ -28,6 +28,8 @@ class Tasks(ViewSet):
 
         return Response(serializer.data)
 
+
+
     #Handle GET requests for single task Returns:Response -- JSON serialized task
     def retrieve(self, request, pk=None):
         try:
@@ -38,6 +40,7 @@ class Tasks(ViewSet):
 
         except Exception as ex:
             return HttpResponseServerError(ex)
+
 
 
     #Handle POST operations for tasks Returns: Response -- JSON serialized task instance
@@ -66,6 +69,7 @@ class Tasks(ViewSet):
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
     #Handle PUT requests for a task Returns:Response -- Empty body with 204 status code
     def update(self, request, pk=None):
         current_user = MyUser.objects.get(user=request.auth.user)
@@ -85,6 +89,20 @@ class Tasks(ViewSet):
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+
+
+    #Handle PATCH requests for a task Returns:Response -- Empty body with 204 status code
+    def patch(self, request, pk=None):
+
+        # Get the object, update the proper field and save the updated object
+        task = Task.objects.get(pk=pk)
+        task.is_complete = request.data["is_complete"]
+        task.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+
     #Handle DELETE requests for a single game Returns: Response -- 200, 404, or 500 status code
     def destroy(self, request, pk=None):
 
@@ -101,6 +119,7 @@ class Tasks(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
 ## Serializers ##
 
 #JSON serializer for default Django Users Arguments:serializers
@@ -115,6 +134,8 @@ class UserSerializer(serializers.ModelSerializer):
                  )
         depth = 1
 
+
+
 #JSON serializer for tasks Arguments: serializers
 class MyUserSerializer(serializers.ModelSerializer):
 
@@ -127,6 +148,9 @@ class MyUserSerializer(serializers.ModelSerializer):
                   'user'
                  )
         depth = 1
+
+
+
 
 #JSON serializer for Tasks Arguments: serializers
 class TaskSerializer(serializers.ModelSerializer):
