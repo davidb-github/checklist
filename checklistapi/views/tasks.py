@@ -1,5 +1,4 @@
 #View module for handling requests about tasks
-#from django.db.models import query
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
