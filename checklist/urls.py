@@ -18,8 +18,11 @@ from django.urls import path
 from django.conf.urls import include
 from rest_framework import routers
 from checklistapi.views import register_user, login_user
+from checklistapi.views import Tasks
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'tasks', Tasks, 'task')
+
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
